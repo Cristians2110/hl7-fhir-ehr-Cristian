@@ -8,4 +8,7 @@ def connect_to_mongodb(db_name, collection_name):
     db = client[db_name]
     collection = db[collection_name]
     return collection
+except Exception as e:
+        print(f"❌ Error al conectar a MongoDB: {e}")
+        return None
 
