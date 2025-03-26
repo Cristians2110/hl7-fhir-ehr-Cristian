@@ -7,4 +7,11 @@ def connect_to_mongodb(db_name, collection_name):
     client = MongoClient(uri, server_api=ServerApi('1'))
     db = client[db_name]
     collection = db[collection_name]
-    return collection
+    return none 
+def insert_patient():
+    collection = connect_to_mongodb("SamplePatientService", "patients")
+    if collection:
+        result = collection.insert_one({"name": "Paciente 1", "age": 30})
+        print(f"✅ Documento insertado con ID: {result.inserted_id}")
+
+insert_patient()
