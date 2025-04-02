@@ -33,7 +33,7 @@ def GetPatientByIdentifier(patientSystem, patientValue):
         patient = collection.find_one({"identifier.system": patientSystem, "identifier.value": patientValue})
         if patient:
             patient["_id"] = str (patient["_id"])
-            return "succes", patient
+            return "success", patient
         return "notfound", None
     except Exception as e:
         return f"notfound", None 
