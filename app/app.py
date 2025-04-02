@@ -27,7 +27,8 @@ async def get_patient_by_id(patient_id: str):
 
 
 @app.get("/patient", response_model=dict)
-async def get_patient_by_identifier(system:str, value:str):
+async def get_patient_by_identifier(system: str, value: str):
+    print("solicitud datos:",system,value)
     status,patient = GetPatientByIdentifier(system, value)
     if status=='success':
         return patient  # Return patient
