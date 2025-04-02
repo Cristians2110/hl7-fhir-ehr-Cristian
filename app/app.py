@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 import uvicorn
-from app.controlador.PatientCrud import GetPatientById,WritePatient
+from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -15,6 +15,7 @@ app.add_middleware(
 
 @app.get("/patient/{patient_id}", response_model=dict)
 async def get_patient_by_id(patient_id: str):
+    print("solicitud datos:",patient_id)
     status,patient = GetPatientById(patient_id)
     if status=='success':
         return patient  # Return patient
