@@ -27,7 +27,6 @@ async def get_patient_by_id(patient_id: str):
 
 
 
-
 @app.get("/patient", response_model=dict)
 async def get_patient_by_identifier(system: str, value: str):
     print("solicitud datos:",system,value)
@@ -52,3 +51,34 @@ async def add_patient(request: Request):
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+
+from pydantic import BaseModel
+from connection import connect_to_mongodb
+
+# Definir el modelo de datos para Service Request
+class ServiceRequest(BaseModel):
+    patient_id: str
+    service_type: str
+    description: str
+    status: str = "pending"
+
+# Conectar a la colección "service_requests"
+service_requests_collection = connect_to_mongodb("SamplePatientService", "service_requests")
+
+# Endpoint para crear una nueva solicitud de servicio
+@app.post("/service_request")
+async def create_service_request(request: ServiceRequest):
+    # Verificar si el paciente existe en la base de datos
+    patients_collection = connect_to_mongodb("SamplePatientService", "patients")
+    patient = patients_collection.find_one({"_id": request.patient_id})
+
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+
+    # Insertar la solicitud de servicio en la base de datos
+    new_request = request.dict()
+    result = service_requests_collection.insert_one(new_request)
+
+    return {"message": "Service request created", "request_id": str(result.inserted_id)}
