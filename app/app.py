@@ -3,10 +3,12 @@ import uvicorn
 import os
 from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier, ServiceRequest
 from fastapi.middleware.cors import CORSMiddleware
-#from pydantic import BaseModel
-#from connection import connect_to_mongodb
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 app.add_middleware(
     CORSMiddleware,
