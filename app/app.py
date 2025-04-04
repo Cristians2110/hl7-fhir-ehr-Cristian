@@ -53,14 +53,14 @@ async def add_patient(request: Request):
 
 
 # Definir el modelo de datos para Service Request
-class ServiceRequest(BaseModel):
+#class ServiceRequest(BaseModel):
     patient_id: str
     service_type: str
     description: str
     status: str = "pending"
 
 # Conectar a la colección "service_requests"
-service_requests_collection = connect_to_mongodb("SamplePatientService", "service_requests")
+#service_requests_collection = connect_to_mongodb("SamplePatientService", "service_requests")
 
 # Endpoint para crear una nueva solicitud de servicio
 @app.post("/service_request")
