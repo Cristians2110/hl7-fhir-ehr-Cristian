@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario RIS - ServiceRequest</title>
+</head>
+<body>
+  <h1>Formulario de Orden RIS (FHIR ServiceRequest)</h1>
+  <form id="serviceRequestForm">
+    <label for="identifierValue">ID del Paciente (MongoDB):</label>
+    <input type="text" id="identifierValue" name="identifierValue" required><br><br>
+
+    <label for="procedureCode">Código del Procedimiento:</label>
+    <input type="text" id="procedureCode" name="procedureCode" required><br><br>
+
+    <label for="procedureDisplay">Nombre del Procedimiento:</label>
+    <input type="text" id="procedureDisplay" name="procedureDisplay" required><br><br>
+
+    <label for="status">Estado:</label>
+    <select id="status" name="status">
+      <option value="active">Activo</option>
+      <option value="completed">Completado</option>
+      <option value="cancelled">Cancelado</option>
+    </select><br><br>
+
+    <label for="priority">Prioridad:</label>
+    <select id="priority" name="priority">
+      <option value="routine">Rutina</option>
+      <option value="urgent">Urgente</option>
+      <option value="asap">ASAP</option>
+    </select><br><br>
+
+    <label for="reason">Razón del examen:</label>
+    <input type="text" id="reason" name="reason"><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    document.getElementById('serviceRequestForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const identifierValue = document.getElementById('identifierValue').value;
+      const procedureCode = document.getElementById('procedureCode').value;
+      const procedureDisplay = document.getElementById('procedureDisplay').value;
+      const status = document.getElementById('status').value;
+      const priority = document.getElementById('priority').value;
+      const reason = document.getElementById('reason').value;
+
+      const serviceRequest = {
+        resourceType: "ServiceRequest",
+        status: status,
+        intent: "order",
+        priority: priority,
+        subject: {
+          reference: `Patient/${identifierValue}`
+        },
+        code: {
+          coding: [{
+            system: "http://loinc.org",
+            code: procedureCode,
+            display: procedureDisplay
+          }]
+        },
+        reasonCode: [{
+          text: reason
+        }]
+      };
+
+      fetch('https://hl7-fhir-ehr-cristian.onrender.com/service_request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(serviceRequest)
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Éxito:', data);
+          alert('Solicitud de servicio creada exitosamente.');
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Error al crear la solicitud de servicio.');
+        });
+    });
+  </script>
+</body>
+</html>
