@@ -40,7 +40,7 @@ def GetPatientByIdentifier(patientSystem, patientValue):
     except Exception as e:
         return f"notfound", None 
 
-lass ServiceRequest(BaseModel):
+class ServiceRequest(BaseModel):
     patient_id: str
     service_type: str
     description: str
