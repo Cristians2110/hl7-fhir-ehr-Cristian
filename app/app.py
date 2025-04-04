@@ -78,6 +78,18 @@ async def create_service_request(request: ServiceRequest):
 
     return {"message": "Service request created", "request_id": str(result.inserted_id)}
 
+from app.controlador.PatientCrud import WriteServiceRequest
+
+@app.post("/service_request", response_model=dict)
+async def create_service_request(request: Request):
+    new_request = await request.json()
+    status, request_id = WriteServiceRequest(new_request)
+    if status == "success":
+        return {"message": "Service request created", "request_id": request_id}
+    else:
+        raise HTTPException(status_code=500, detail=f"Error creating request: {status}")
+
+
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
