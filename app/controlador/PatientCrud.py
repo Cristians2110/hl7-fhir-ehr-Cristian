@@ -1,6 +1,8 @@
 from connection import connect_to_mongodb
 from bson import ObjectId
 from fhir.resources.patient import Patient
+from pydantic import BaseModel
+from datetime import datetime
 import json
 
 collection = connect_to_mongodb("SamplePatientService", "patients")
@@ -37,3 +39,24 @@ def GetPatientByIdentifier(patientSystem, patientValue):
         return "notfound", None
     except Exception as e:
         return f"notfound", None 
+
+lass ServiceRequest(BaseModel):
+    patient_id: str
+    service_type: str
+    description: str
+    status: str = "pending"
+    created_at: datetime = datetime.utcnow()
+
+# Conectarse a la colección service_requests
+service_collection = connect_to_mongodb("SamplePatientService", "service_requests")
+
+def WriteServiceRequest(request_dict: dict):
+    try:
+        service = ServiceRequest(**request_dict)
+        result = service_collection.insert_one(service.model_dump())
+        if result.inserted_id:
+            return "success", str(result.inserted_id)
+        else:
+            return "errorInserting", None
+    except Exception as e:
+        return f"errorValidating: {str(e)}", None
