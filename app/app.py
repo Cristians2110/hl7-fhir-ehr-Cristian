@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 import uvicorn
 import os
-from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier
+from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier, ServiceRequest
 from fastapi.middleware.cors import CORSMiddleware
 #from pydantic import BaseModel
 #from connection import connect_to_mongodb
