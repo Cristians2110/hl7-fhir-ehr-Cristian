@@ -3,6 +3,8 @@ import uvicorn
 import os
 from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from connection import connect_to_mongodb
 
 app = FastAPI()
 
@@ -48,14 +50,7 @@ async def add_patient(request: Request):
     else:
         raise HTTPException(status_code=500, detail=f"Validating error: {status}")
 
-if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
 
-
-
-from pydantic import BaseModel
-from connection import connect_to_mongodb
 
 # Definir el modelo de datos para Service Request
 class ServiceRequest(BaseModel):
@@ -82,3 +77,8 @@ async def create_service_request(request: ServiceRequest):
     result = service_requests_collection.insert_one(new_request)
 
     return {"message": "Service request created", "request_id": str(result.inserted_id)}
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
