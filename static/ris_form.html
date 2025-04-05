@@ -1,89 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Formulario RIS - ServiceRequest</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Orden RIS</title>
 </head>
 <body>
-  <h1>Formulario de Orden RIS (FHIR ServiceRequest)</h1>
-  <form id="serviceRequestForm">
-    <label for="identifierValue">ID del Paciente (MongoDB):</label>
-    <input type="text" id="identifierValue" name="identifierValue" required><br><br>
+    <h2>Formulario de Orden RIS (FHIR ServiceRequest)</h2>
+    <form action="/enviar_orden" method="post">
+        <label>ID del Paciente (MongoDB):</label>
+        <input type="text" name="id_paciente" required><br><br>
 
-    <label for="procedureCode">Código del Procedimiento:</label>
-    <input type="text" id="procedureCode" name="procedureCode" required><br><br>
+        <label>Tipo de Procedimiento:</label>
+        <select name="tipo_procedimiento" required>
+            <option value="">Seleccione una opción</option>
+            <option value="radiografia">Radiografía</option>
+            <option value="tomografia">Tomografía</option>
+            <option value="resonancia">Resonancia Magnética</option>
+            <option value="ultrasonido">Ultrasonido</option>
+            <option value="ecg">Electrocardiograma (ECG)</option>
+        </select><br><br>
 
-    <label for="procedureDisplay">Nombre del Procedimiento:</label>
-    <input type="text" id="procedureDisplay" name="procedureDisplay" required><br><br>
+        <label>Motivo:</label>
+        <input type="text" name="motivo" required><br><br>
 
-    <label for="status">Estado:</label>
-    <select id="status" name="status">
-      <option value="active">Activo</option>
-      <option value="completed">Completado</option>
-      <option value="cancelled">Cancelado</option>
-    </select><br><br>
+        <label>Quién Solicita:</label>
+        <input type="text" name="quien_solicita" required><br><br>
 
-    <label for="priority">Prioridad:</label>
-    <select id="priority" name="priority">
-      <option value="routine">Rutina</option>
-      <option value="urgent">Urgente</option>
-      <option value="asap">ASAP</option>
-    </select><br><br>
+        <label>Prioridad:</label>
+        <select name="prioridad">
+            <option value="rutina">Rutina</option>
+            <option value="urgente">Urgente</option>
+            <option value="emergencia">Emergencia</option>
+        </select><br><br>
 
-    <label for="reason">Razón del examen:</label>
-    <input type="text" id="reason" name="reason"><br><br>
+        <label>Solicitante:</label>
+        <input type="text" name="solicitante" required><br><br>
 
-    <button type="submit">Enviar</button>
-  </form>
+        <label>Comentarios:</label>
+        <textarea name="comentarios" rows="3"></textarea><br><br>
 
-  <script>
-    document.getElementById('serviceRequestForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const identifierValue = document.getElementById('identifierValue').value;
-      const procedureCode = document.getElementById('procedureCode').value;
-      const procedureDisplay = document.getElementById('procedureDisplay').value;
-      const status = document.getElementById('status').value;
-      const priority = document.getElementById('priority').value;
-      const reason = document.getElementById('reason').value;
-
-      const serviceRequest = {
-        resourceType: "ServiceRequest",
-        status: status,
-        intent: "order",
-        priority: priority,
-        subject: {
-          reference: `Patient/${identifierValue}`
-        },
-        code: {
-          coding: [{
-            system: "http://loinc.org",
-            code: procedureCode,
-            display: procedureDisplay
-          }]
-        },
-        reasonCode: [{
-          text: reason
-        }]
-      };
-
-      fetch('https://hl7-fhir-ehr-cristian.onrender.com/service_request', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(serviceRequest)
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Éxito:', data);
-          alert('Solicitud de servicio creada exitosamente.');
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          alert('Error al crear la solicitud de servicio.');
-        });
-    });
-  </script>
+        <button type="submit">Enviar</button>
+    </form>
 </body>
 </html>
