@@ -7,12 +7,12 @@
 </head>
 <body>
     <h2>Formulario de Orden RIS (FHIR ServiceRequest)</h2>
-    <form action="/enviar_orden" method="post">
+    <form action="https://hl7-fhir-ehr-cristian.onrender.com/enviar_orden" method="post">
         <label>ID del Paciente (MongoDB):</label>
-        <input type="text" name="id_paciente" required><br><br>
+        <input type="text" name="id" required><br><br>
 
         <label>Tipo de Procedimiento:</label>
-        <select name="tipo_procedimiento" required>
+        <select name="tipo" required>
             <option value="">Seleccione una opción</option>
             <option value="radiografia">Radiografía</option>
             <option value="tomografia">Tomografía</option>
@@ -33,9 +33,6 @@
             <option value="urgente">Urgente</option>
             <option value="emergencia">Emergencia</option>
         </select><br><br>
-
-        <label>Solicitante:</label>
-        <input type="text" name="solicitante" required><br><br>
 
         <label>Comentarios:</label>
         <textarea name="comentarios" rows="3"></textarea><br><br>
