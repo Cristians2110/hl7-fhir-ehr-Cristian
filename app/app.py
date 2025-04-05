@@ -1,12 +1,30 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Form
 import uvicorn
 import os
 from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier, ServiceRequest
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse, JSONResponse
 
 app = FastAPI()
-
+@app.post("/enviar_orden")
+async def enviar_orden(
+    id_paciente: str = Form(...),
+    tipo_procedimiento: str = Form(...),
+    motivo: str = Form(...),
+    prioridad: str = Form(...),
+    comentarios: str = Form(None)
+):
+    return {
+        "mensaje": "Orden recibida correctamente",
+        "id_paciente": id_paciente,
+        "tipo_procedimiento": tipo_procedimiento,
+        "motivo": motivo,
+        "prioridad": prioridad,
+        "comentarios": comentarios
+    }
+    print("ServiceRequest recibido:", service_request)
+    return JSONResponse(content={"status": "ok", "data": service_request})
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -28,6 +46,7 @@ async def get_patient_by_id(patient_id: str):
         raise HTTPException(status_code=404, detail="Patient not found")
     else:
         raise HTTPException(status_code=500, detail=f"Internal error. {status}")
+
 
 
 
