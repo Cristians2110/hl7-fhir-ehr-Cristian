@@ -4,7 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi import Form
-from pydantic import BaseModel 
+from pydantic import BaseModel
+from fastapi import HTTPException
+
 import uvicorn
 
 
@@ -59,24 +61,27 @@ from app.controlador.PatientCrud import WriteServiceRequest
 
 @app.post("/service_request")
 async def create_service_request(request: Request):
-    data = await request.json()
-    print("Datos recibidos:", data)  # Debug
+    try:
+        data = await request.json()
+        print("📥 Datos recibidos:", data)
 
-    request_json = {
-        "patient_id": data.get("patient_id"),
-        "document_type": data.get("document_type"),
-        "service_type": data.get("service_type"),
-        "description": data.get("description"),
-        "requester": data.get("requester"),
-        "priority": data.get("priority"),
-    }
+        request_json = {
+            "patient_id": data.get("patient_id"),
+            "document_type": data.get("document_type"),
+            "service_type": data.get("service_type"),
+            "description": data.get("description"),
+            "requester": data.get("requester"),
+            "priority": data.get("priority"),
+        }
 
-    # Aquí conectamos y escribimos a Mongo
-    collection = connect_to_mongodb("SamplePatientService", "service_requests")
-    result = collection.insert_one(request_json)
+        collection = connect_to_mongodb("SamplePatientService", "service_requests")
+        result = collection.insert_one(request_json)
 
-    return {"status": "success", "id": str(result.inserted_id)}
+        return {"status": "success", "id": str(result.inserted_id)}
 
+    except Exception as e:
+        print("❌ Error en /service_request:", e)
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/service_request_form", response_class=HTMLResponse)
