@@ -7,6 +7,7 @@ from fastapi import Form
 from pydantic import BaseModel
 from fastapi import HTTPException
 from connection import connect_to_mongodb
+from bson import ObjectId
 
 import uvicorn
 
@@ -19,6 +20,20 @@ app.add_middleware(
     allow_methods=["*"],  # Permitir todos los métodos (GET, POST, etc.)
     allow_headers=["*"],  # Permitir todos los encabezados
 )
+
+@app.get("/service_request/{request_id}")
+def get_service_request(request_id: str):
+    collection = connect_to_mongodb("SamplePatientService", "service_requests")
+    try:
+        result = collection.find_one({"_id": ObjectId(request_id)})
+    except Exception as e:
+        return {"error": f"ID inválido: {str(e)}"}
+
+    if result:
+        result["_id"] = str(result["_id"])  # Convertir el ObjectId a string
+        return result
+    return {"error": "Solicitud no encontrada"}
+
 
 @app.get("/patient/{patient_id}", response_model=dict)
 async def get_patient_by_id(patient_id: str):
