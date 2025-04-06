@@ -64,6 +64,15 @@ async def create_service_request(request: Request):
     else:
         raise HTTPException(status_code=500, detail=f"Error creating request: {status}")
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/service_request_form", response_class=HTMLResponse)
+async def serve_form():
+    with open("static/service_request_form.html", "r") as f:
+        html_content = f.read()
+    return HTMLResponse(content=html_content, status_code=200)
+
+
 
 if __name__ == '__main__':
     import uvicorn
