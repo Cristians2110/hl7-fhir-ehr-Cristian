@@ -7,27 +7,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
 
 app = FastAPI()
-@app.post("/enviar_orden")
-async def enviar_orden(
-    id_paciente: str = Form(...),
-    tipo_procedimiento: str = Form(...),
-    motivo: str = Form(...),
-    prioridad: str = Form(...),
-    comentarios: str = Form(None)
-):
-    return {
-        "mensaje": "Orden recibida correctamente",
-        "id_paciente": id_paciente,
-        "tipo_procedimiento": tipo_procedimiento,
-        "motivo": motivo,
-        "prioridad": prioridad,
-        "comentarios": comentarios
-    }
-    print("ServiceRequest recibido:", service_request)
-    return JSONResponse(content={"status": "ok", "data": service_request})
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Permitir solo este dominio
