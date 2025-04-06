@@ -57,25 +57,23 @@ async def add_patient(request: Request):
 # Endpoint para crear una nueva solicitud de servicio
 from app.controlador.PatientCrud import WriteServiceRequest
 
-class ServiceRequestData(BaseModel):
-    patient_id: str
-    document_type: str
-    service_type: str
-    description: str
-    requester: str
-    priority: str
+@app.post("/service_request")
+async def create_service_request(request: Request):
+    data = await request.json()
 
-# Ruta POST que recibe el formulario en JSON
-@app.post("/service_request_form")
-async def create_service_request_form(data: ServiceRequestData):
-    # Puedes hacer aquí lo que necesites con los datos (guardar en DB, enviar a FHIR, etc.)
-    print("Solicitud recibida:", data)
+    print("Datos recibidos:", data)  # Para ver en consola qué llega
 
-    # Simulamos respuesta con un ID generado
-    return {
-        "message": "Solicitud creada exitosamente",
-        "request_id": "REQ-12345"
+    request_json = {
+        "tipo_documento": data.get("document_type"),
+        "numero_documento": data.get("patient_id"),
+        "tipo_examen": data.get("service_type"),
+        "descripcion": data.get("description"),
+        "solicitante": data.get("requester"),
+        "prioridad": data.get("priority"),
     }
+
+    status, id = WriteServiceRequest(request_json)
+    return {"status": status, "id": id}
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
