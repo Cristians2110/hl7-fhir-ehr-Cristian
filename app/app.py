@@ -60,10 +60,8 @@ from app.controlador.PatientCrud import WriteServiceRequest
 @app.post("/service_request")
 async def create_service_request(request: Request):
     data = await request.json()
+    print("Datos recibidos:", data)  # Debug
 
-    print("Datos recibidos:", data)  # Para debug
-
-    # Mismo formato que espera el modelo ServiceRequest
     request_json = {
         "patient_id": data.get("patient_id"),
         "document_type": data.get("document_type"),
@@ -73,8 +71,11 @@ async def create_service_request(request: Request):
         "priority": data.get("priority"),
     }
 
-    status, id = WriteServiceRequest(request_json)
-    return {"status": status, "id": id}
+    # Aquí conectamos y escribimos a Mongo
+    collection = connect_to_mongodb("SamplePatientService", "service_requests")
+    result = collection.insert_one(request_json)
+
+    return {"status": "success", "id": str(result.inserted_id)}
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
