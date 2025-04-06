@@ -1,10 +1,10 @@
-from fastapi import FastAPI, HTTPException, Request, Form
-import uvicorn
-import os
-from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier, ServiceRequest
+from fastapi import FastAPI, Request
+from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
+import uvicorn
+
 
 app = FastAPI()
 app.add_middleware(
@@ -55,14 +55,11 @@ async def add_patient(request: Request):
 # Endpoint para crear una nueva solicitud de servicio
 from app.controlador.PatientCrud import WriteServiceRequest
 
-@app.post("/service_request", response_model=dict)
+@app.post("/service_request")
 async def create_service_request(request: Request):
-    new_request = await request.json()
-    status, request_id = WriteServiceRequest(new_request)
-    if status == "success":
-        return {"message": "Service request created", "request_id": request_id}
-    else:
-        raise HTTPException(status_code=500, detail=f"Error creating request: {status}")
+    request_json = await request.json()
+    status, id = WriteServiceRequest(request_json)
+    return {"status": status, "id": id}
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
