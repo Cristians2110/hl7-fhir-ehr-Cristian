@@ -61,15 +61,16 @@ from app.controlador.PatientCrud import WriteServiceRequest
 async def create_service_request(request: Request):
     data = await request.json()
 
-    print("Datos recibidos:", data)  # Para ver en consola qué llega
+    print("Datos recibidos:", data)  # Para debug
 
+    # Mismo formato que espera el modelo ServiceRequest
     request_json = {
-        "tipo_documento": data.get("document_type"),
-        "numero_documento": data.get("patient_id"),
-        "tipo_examen": data.get("service_type"),
-        "descripcion": data.get("description"),
-        "solicitante": data.get("requester"),
-        "prioridad": data.get("priority"),
+        "patient_id": data.get("patient_id"),
+        "document_type": data.get("document_type"),
+        "service_type": data.get("service_type"),
+        "description": data.get("description"),
+        "requester": data.get("requester"),
+        "priority": data.get("priority"),
     }
 
     status, id = WriteServiceRequest(request_json)
