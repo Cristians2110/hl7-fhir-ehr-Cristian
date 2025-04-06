@@ -42,8 +42,11 @@ def GetPatientByIdentifier(patientSystem, patientValue):
 
 class ServiceRequest(BaseModel):
     patient_id: str
+    document_type: str
     service_type: str
     description: str
+    requester: str
+    priority: str
     status: str = "pending"
     created_at: datetime = datetime.utcnow()
 
