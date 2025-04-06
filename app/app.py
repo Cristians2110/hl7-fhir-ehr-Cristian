@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse
 from fastapi import Form
 from pydantic import BaseModel
 from fastapi import HTTPException
-from db import connect_to_mongodb
+from connection import connect_to_mongodb
 
 import uvicorn
 
