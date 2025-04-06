@@ -77,7 +77,7 @@
 
                 const result = await response.json();
                 document.getElementById("result").innerText =
-                    response.ok ? `✅ Solicitud creada con ID: ${result.request_id}` 
+                    response.ok ? `✅ Solicitud creada con ID: ${result.id}` 
                                 : `❌ Error: ${result.detail || 'Error desconocido'}`;
             } catch (error) {
                 document.getElementById("result").innerText = `❌ Error al conectar con el servidor`;
