@@ -62,4 +62,5 @@ def WriteServiceRequest(request_dict: dict):
         else:
             return "errorInserting", None
     except Exception as e:
+        print("❌ Error en WriteServiceRequest:", str(e)) 
         return f"errorValidating: {str(e)}", None
