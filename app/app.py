@@ -3,6 +3,7 @@ from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientBy
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
+from fastapi import Form
 import uvicorn
 
 
@@ -56,8 +57,24 @@ async def add_patient(request: Request):
 from app.controlador.PatientCrud import WriteServiceRequest
 
 @app.post("/service_request")
-async def create_service_request(request: Request):
-    request_json = await request.json()
+async def create_service_request(
+    tipo_documento: str = Form(...),
+    numero_documento: str = Form(...),
+    tipo_examen: str = Form(...),
+    descripcion: str = Form(...),
+    solicitante: str = Form(...),
+    prioridad: str = Form(...)
+):
+    # Armar el JSON a mano si lo necesitas así
+    request_json = {
+        "tipo_documento": tipo_documento,
+        "numero_documento": numero_documento,
+        "tipo_examen": tipo_examen,
+        "descripcion": descripcion,
+        "solicitante": solicitante,
+        "prioridad": prioridad,
+    }
+
     status, id = WriteServiceRequest(request_json)
     return {"status": status, "id": id}
 
