@@ -34,6 +34,19 @@
         <label for="description">Descripción:</label><br>
         <textarea id="description" name="description" required></textarea><br><br>
 
+        <!-- Solicitante -->
+        <label for="requester">Solicitante:</label><br>
+        <input type="text" id="requester" name="requester" required><br><br>
+
+        <!-- Prioridad -->
+        <label for="priority">Prioridad:</label><br>
+        <select id="priority" name="priority" required>
+            <option value="">--Selecciona--</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+        </select><br><br>
+
         <button type="submit">Enviar Solicitud</button>
     </form>
 
@@ -46,9 +59,11 @@
 
             const data = {
                 patient_id: document.getElementById("patient_id").value,
+                document_type: document.getElementById("document_type").value,
                 service_type: document.getElementById("service_type").value,
                 description: document.getElementById("description").value,
-                document_type: document.getElementById("document_type").value
+                requester: document.getElementById("requester").value,
+                priority: document.getElementById("priority").value
             };
 
             const response = await fetch("https://tu-url-de-render.com/service_request", {
