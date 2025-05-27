@@ -1,89 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Crear Service Request</title>
+  <meta charset="UTF-8">
+  <title>Crear Service Request</title>
 </head>
 <body>
-    <h2>Formulario de Solicitud de Servicio (RIS)</h2>
-    <form id="serviceRequestForm">
-        <!-- Tipo de Documento -->
-        <label for="document_type">Tipo de Documento:</label><br>
-        <select id="document_type" name="document_type" required>
-            <option value="">--Selecciona--</option>
-            <option value="CC">Cédula</option>
-            <option value="TI">Tarjeta de Identidad</option>
-            <option value="CE">Cédula de Extranjería</option>
-            <option value="PP">Pasaporte</option>
-        </select><br><br>
+  <h2>Formulario de Solicitud de Servicio (RIS)</h2>
 
-        <!-- Número de Documento -->
-        <label for="patient_id">Número de Documento del Paciente:</label><br>
-        <input type="text" id="patient_id" name="patient_id" required><br><br>
+  <form id="serviceRequestForm">
+    <!-- Tipo de Documento -->
+    <label for="document_type">Tipo de Documento:</label><br>
+    <select id="document_type" name="document_type" required>
+      <option value="">--Selecciona--</option>
+      <option value="CC">Cédula</option>
+      <option value="TI">Tarjeta de Identidad</option>
+      <option value="CE">Cédula de Extranjería</option>
+      <option value="PP">Pasaporte</option>
+    </select><br><br>
 
-        <!-- Tipo de Examen -->
-        <label for="service_type">Tipo de Examen:</label><br>
-        <select id="service_type" name="service_type" required>
-            <option value="">--Selecciona--</option>
-            <option value="radiografia">Radiografía</option>
-            <option value="resonancia">Resonancia Magnética</option>
-            <option value="ecografia">Ecografía</option>
-            <option value="tomografia">Tomografía</option>
-        </select><br><br>
+    <!-- Número de Documento -->
+    <label for="patient_id">Número de Documento del Paciente:</label><br>
+    <input type="text" id="patient_id" name="patient_id" required><br><br>
 
-        <!-- Descripción -->
-        <label for="description">Descripción:</label><br>
-        <textarea id="description" name="description" required></textarea><br><br>
+    <!-- Tipo de Examen (CUPS) -->
+    <label for="service_type">Tipo de Examen (Código CUPS):</label><br>
+    <select id="service_type" name="service_type" required>
+      <option value="">--Selecciona--</option>
 
-        <!-- Solicitante -->
-        <label for="requester">Solicitante:</label><br>
-        <input type="text" id="requester" name="requester" required><br><br>
+      <!-- Radiografías -->
+      <option value="87.38.01">87.38.01 - Radiografía de tórax posteroanterior y lateral</option>
+      <option value="87.03.01">87.03.01 - Radiografía de cráneo</option>
+      <option value="87.06.01">87.06.01 - Radiografía de columna cervical</option>
+      <option value="87.06.02">87.06.02 - Radiografía de columna dorsolumbar</option>
+      <option value="87.08.01">87.08.01 - Radiografía de pelvis</option>
+      <option value="87.10.01">87.10.01 - Radiografía de abdomen simple</option>
+      <option value="87.28.01">87.28.01 - Radiografía de extremidades superiores</option>
+      <option value="87.30.01">87.30.01 - Radiografía de extremidades inferiores</option>
 
-        <!-- Prioridad -->
-        <label for="priority">Prioridad:</label><br>
-        <select id="priority" name="priority" required>
-            <option value="">--Selecciona--</option>
-            <option value="alta">Alta</option>
-            <option value="media">Media</option>
-            <option value="baja">Baja</option>
-        </select><br><br>
+      <!-- Ecografías -->
+      <option value="87.44.02">87.44.02 - Ecografía abdominal total</option>
+      <option value="87.44.03">87.44.03 - Ecografía pélvica transabdominal</option>
+      <option value="87.44.04">87.44.04 - Ecografía obstétrica temprana</option>
+      <option value="87.44.05">87.44.05 - Ecografía renal y vías urinarias</option>
+      <option value="87.44.06">87.44.06 - Ecografía de partes blandas</option>
+      <option value="87.44.07">87.44.07 - Ecografía testicular</option>
+      <option value="87.44.08">87.44.08 - Ecografía tiroidea</option>
 
-        <button type="submit">Enviar Solicitud</button>
-    </form>
+      <!-- TAC -->
+      <option value="88.38.01">88.38.01 - TAC de tórax simple</option>
+      <option value="88.38.02">88.38.02 - TAC de cráneo</option>
+      <option value="88.38.03">88.38.03 - TAC de abdomen simple</option>
+      <option value="88.38.04">88.38.04 - TAC abdomen y pelvis con contraste</option>
+      <option value="88.38.06">88.38.06 - TAC de columna lumbar</option>
+      <option value="88.38.08">88.38.08 - TAC de senos paranasales</option>
 
-    <p id="result"></p>
+      <!-- Resonancias -->
+      <option value="88.01.03">88.01.03 - Resonancia magnética de cráneo simple</option>
+      <option value="88.01.04">88.01.04 - Resonancia magnética de columna lumbar</option>
+      <option value="88.01.05">88.01.05 - Resonancia magnética de rodilla</option>
+      <option value="88.01.06">88.01.06 - Resonancia magnética de abdomen superior</option>
+    </select><br><br>
 
-    <script>
-        const form = document.getElementById("serviceRequestForm");
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
+    <!-- Descripción (autocompletada) -->
+    <label for="description">Descripción del examen:</label><br>
+    <textarea id="description" name="description" required></textarea><br><br>
 
-            const data = {
-                patient_id: document.getElementById("patient_id").value,
-                document_type: document.getElementById("document_type").value,
-                service_type: document.getElementById("service_type").value,
-                description: document.getElementById("description").value,
-                requester: document.getElementById("requester").value,
-                priority: document.getElementById("priority").value
-            };
+    <!-- Solicitante -->
+    <label for="requester">Solicitante (ID del profesional):</label><br>
+    <input type="text" id="requester" name="requester" required><br><br>
 
-            try {
-                const response = await fetch("https://hl7-fhir-ehr-cristian.onrender.com/service_request", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                });
+    <!-- Prioridad -->
+    <label for="priority">Prioridad:</label><br>
+    <select id="priority" name="priority" required>
+      <option value="">--Selecciona--</option>
+      <option value="alta">Alta</option>
+      <option value="media">Media</option>
+      <option value="baja">Baja</option>
+    </select><br><br>
 
-                const result = await response.json();
-                document.getElementById("result").innerText =
-                    response.ok ? `✅ Solicitud creada con ID: ${result.id}` 
-                                : `❌ Error: ${result.detail || 'Error desconocido'}`;
-            } catch (error) {
-                document.getElementById("result").innerText = `❌ Error al conectar con el servidor`;
-                console.error(error);
-            }
+    <button type="submit">Enviar Solicitud</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    const BASE_URL = "https://hl7-fhir-ehr-cristian.onrender.com";
+
+    const cupsDescriptions = {
+      "87.38.01": "Radiografía de tórax posteroanterior y lateral",
+      "87.03.01": "Radiografía de cráneo",
+      "87.06.01": "Radiografía de columna cervical",
+      "87.06.02": "Radiografía de columna dorsolumbar",
+      "87.08.01": "Radiografía de pelvis",
+      "87.10.01": "Radiografía de abdomen simple",
+      "87.28.01": "Radiografía de extremidades superiores",
+      "87.30.01": "Radiografía de extremidades inferiores",
+      "87.44.02": "Ecografía abdominal total",
+      "87.44.03": "Ecografía pélvica transabdominal",
+      "87.44.04": "Ecografía obstétrica temprana",
+      "87.44.05": "Ecografía renal y vías urinarias",
+      "87.44.06": "Ecografía de partes blandas",
+      "87.44.07": "Ecografía testicular",
+      "87.44.08": "Ecografía tiroidea",
+      "88.38.01": "TAC de tórax simple",
+      "88.38.02": "TAC de cráneo",
+      "88.38.03": "TAC de abdomen simple",
+      "88.38.04": "TAC abdomen y pelvis con contraste",
+      "88.38.06": "TAC de columna lumbar",
+      "88.38.08": "TAC de senos paranasales",
+      "88.01.03": "Resonancia magnética de cráneo simple",
+      "88.01.04": "Resonancia magnética de columna lumbar",
+      "88.01.05": "Resonancia magnética de rodilla",
+      "88.01.06": "Resonancia magnética de abdomen superior"
+    };
+
+    // Autocompletar descripción
+    document.getElementById("service_type").addEventListener("change", function () {
+      const code = this.value;
+      document.getElementById("description").value = cupsDescriptions[code] || "";
+    });
+
+    // Enviar formulario
+    document.getElementById("serviceRequestForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        patient_id: document.getElementById("patient_id").value,
+        document_type: document.getElementById("document_type").value,
+        service_type: document.getElementById("service_type").value,
+        description: document.getElementById("description").value,
+        requester: document.getElementById("requester").value,
+        priority: document.getElementById("priority").value
+      };
+
+      try {
+        const response = await fetch(`${BASE_URL}/service_request`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
         });
-    </script>
+
+        const result = await response.json();
+        document.getElementById("result").innerText =
+          response.ok
+            ? `✅ Solicitud creada con ID: ${result.id}`
+            : `❌ Error: ${result.detail || 'Error desconocido'}`;
+      } catch (error) {
+        document.getElementById("result").innerText = `❌ Error al conectar con el servidor`;
+        console.error(error);
+      }
+    });
+  </script>
 </body>
 </html>
